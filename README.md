@@ -1,4 +1,6 @@
 # AverageSruvivor
 Szakdolgozat - 2D-s Survivor típusú játék készítése Unity-ben
 
-A szkriptek az **AverageSurvivor/Scripts** mappában **.cs** kiterjesztéssel találhatók. 
+A szkriptek az **AverageSurvivor/Scripts** mappában **.cs** kiterjesztéssel találhatóak. 
+
+A játék önálló telepítővel rendelkezik, ami az **AverageSurvivorSetup.exe** letöltésével, majd futtatásával érhető el.
