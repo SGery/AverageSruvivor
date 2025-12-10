@@ -8,19 +8,11 @@ public class PropRandomizer : MonoBehaviour
     public List<GameObject> propPrefabs;
 
 
-    // Start is called before the first frame update
     void Start()
     {
         SpawnProps();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    // Spawn(parent) prop at(to) respective location
     void SpawnProps()
     {
         foreach(GameObject sp in propSpawnPoints)
