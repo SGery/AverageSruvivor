@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(SpriteRenderer))]
 public class EnemyStats : MonoBehaviour
 {
     public EnemyScriptableObject enemyData;
@@ -16,6 +17,13 @@ public class EnemyStats : MonoBehaviour
     public float despawnDistance = 20f;
     Transform player;
 
+    [Header("Damage Feedback")]
+    public Color hitColor = new Color(1, 0, 0, 1);
+    public float hitFlashDuration = 0.15f;
+    public float deathFadeTime = 0.5f;
+    Color originalColor;
+    SpriteRenderer spriteRenderer;
+    EnemyMovement enemyMovement;
 
     void Awake()
     {
@@ -27,6 +35,9 @@ public class EnemyStats : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<PlayerStats>().transform;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalColor = spriteRenderer.color;
+        enemyMovement = GetComponent<EnemyMovement>();
     }
 
     void Update()
@@ -37,14 +48,49 @@ public class EnemyStats : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float dmg)
+    public void TakeDamage(float dmg, Vector2 sourcePosition, float knockbackForce = 5f, float knockbackDecay = 0.2f)
     {
         currentHealth -= dmg;
+        StartCoroutine(HitFlash());
+
+        if(knockbackForce > 0)
+        {
+            Vector2 knockbackDirection = (Vector2)transform.position - sourcePosition;
+            enemyMovement.Knockback(knockbackDirection.normalized * knockbackForce, knockbackDecay);
+        }
+
+        if (dmg > 0)
+        {
+            GameManager.FloatingText(Mathf.FloorToInt(dmg).ToString(), transform);
+        }
 
         if (currentHealth <= 0)
         {
             Kill();
         }
+    }
+
+    IEnumerator HitFlash()
+    {
+        spriteRenderer.color = hitColor;
+        yield return new WaitForSeconds(hitFlashDuration);
+        spriteRenderer.color = originalColor;
+    }
+
+    IEnumerator DeathFade()
+    {
+        WaitForEndOfFrame wait = new WaitForEndOfFrame();
+        float elapsed = 0f;
+        float alpha = spriteRenderer.color.a;
+        while(elapsed < deathFadeTime)
+        {
+        //  Single frame delay
+            yield return wait;
+            elapsed += Time.deltaTime;
+            spriteRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, (1 - elapsed / deathFadeTime) * alpha);
+        }
+
+        Destroy(gameObject);
     }
 
     public void Kill()

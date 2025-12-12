@@ -46,7 +46,8 @@ public class Pickup : MonoBehaviour
 
         else
         {
-            transform.position = startPos + bobbingSettings.direction * Mathf.Sin((Time.time + bobbingOffset) * bobbingSettings.frequency);
+            transform.position = startPos + bobbingSettings.direction * Mathf.Sin((Time.time + bobbingOffset
+                ) * bobbingSettings.frequency);
         }
     }
 

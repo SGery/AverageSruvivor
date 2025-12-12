@@ -138,6 +138,8 @@ public class PlayerStats : MonoBehaviour
     public int weaponIndex;
     public int passiveItemIndex;
 
+    public ParticleSystem hitEffect;
+
     [Header("UI")]
     public Image HealthBar;
     public Image ExperienceBar;
@@ -145,7 +147,7 @@ public class PlayerStats : MonoBehaviour
     public GameObject secondWeaponTest;
     public GameObject firstPassiveItemTest, secondPassiveItemTest;
     
-
+    PlayerAnimator playerAnimator;
 
     private void Awake()
     {
@@ -164,11 +166,10 @@ public class PlayerStats : MonoBehaviour
 
         collector.SetRadius(CurrentMagnet);
 
-        SpawnWeapon(characterData.StartingWeapon);       
-        //SpawnWeapon(secondWeaponTest);
-        //SpawnPassiveItem(firstPassiveItemTest);
-        //SpawnPassiveItem(secondPassiveItemTest);
-        
+        SpawnWeapon(characterData.StartingWeapon);
+
+        playerAnimator = GetComponent<PlayerAnimator>();
+        playerAnimator.SetAnimatorController(characterData.animatorController);
     }
 
     private void Start()
@@ -239,6 +240,11 @@ public class PlayerStats : MonoBehaviour
         if (!isInvincible)
         {
             CurrentHealth -= dmg;
+
+            if(hitEffect)
+            {
+                Instantiate(hitEffect, transform.position, Quaternion.identity);
+            }
 
             iFrameTimer = iFrameDuration;
             isInvincible = true;

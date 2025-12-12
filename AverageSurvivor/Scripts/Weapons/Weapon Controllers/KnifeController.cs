@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class KnifeController : WeaponController
 {
-
-
-    // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
